@@ -1,42 +1,32 @@
-class Solution {
-    // l           r
-    // 1 3 2 4 6 5 7
-    //      i=j
-    // 
-    // x = 4
-    int Partition(vector<int>& a, int l, int r) {
-        int idx = l + rand() % (r - l + 1);
-        swap(a[l], a[idx]);
-        int i = l, j = r;
-        int x = a[i];
-        while (i < j) {
-            while (i < j && a[j] > x)
-                j--;
-            if (i < j)
-                swap(a[i], a[j]), ++i;
+class Solution:
+    def Partition(self, a, l, r):
+        idx = random.randint(l, r)
+        a[l], a[idx] = a[idx], a[l]
+        i = l
+        j = r
+        x = a[i]
+        while i < j:
+            while i < j and a[j] > x:
+                j -= 1
+            if i < j:
+                a[i], a[j] = a[j], a[i]
+                i += 1
+            
+            while i < j and a[i] < x:
+                i += 1
+            if i < j:
+                a[i], a[j] = a[j], a[i]
+                j -= 1
+        return i
 
-            while (i < j && a[i] < x)
-                i++;
-            if (i < j)
-                swap(a[i], a[j]), --j;
+    def QuickSort(self, a, l, r):
+        if l >= r:
+            return
+        pivox = self.Partition(a, l, r)
+        self.QuickSort(a, l, pivox-1)
+        self.QuickSort(a, pivox+1, r)
 
-        }
-        return i;
-    }
-
-    void QuickSort(vector<int>& a, int l, int r) {
-        if (l >= r) {
-            return;
-        }
-        int pivox = Partition(a, l, r);
-        QuickSort(a, l, pivox - 1);
-        QuickSort(a, pivox + 1, r);
-    }
-
-public:
-    int majorityElement(vector<int>& nums) {
-        int n = nums.size();
-        QuickSort(nums, 0, n - 1);
-        return nums[n / 2];
-    }
-};
+    def majorityElement(self, nums: List[int]) -> int:
+        n = len(nums)
+        self.QuickSort(nums, 0, n-1)
+        return nums[n//2]
